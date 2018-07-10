@@ -1,0 +1,4 @@
+{
+    "go.formatTool": "gofmt",
+    "git.ignoreLimitWarning": true
+}
