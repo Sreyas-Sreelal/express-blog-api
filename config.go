@@ -5,5 +5,5 @@ const (
 	USER_NAME = "Sreyas"
 	PASSWORD  = "password"
 	API_HOST  = "localhost"
-	API_PORT  = "8000"
+	API_PORT  = "5000"
 )

@@ -31,15 +31,18 @@ func main() {
 
 	authentication := basicauth.New(authConfig)
 	app := iris.New()
-
 	app.Use(Cors)
 
-	app.RegisterView(iris.HTML("./public", ".html"))
-	app.StaticWeb("/static/", "./static/")
-	app.StaticWeb("/", ".")
-	app.Get("/", func(ctx iris.Context) {
-		ctx.View("index.html")
-	})
+	/*
+		|For production use|
+
+		app.RegisterView(iris.HTML("./public", ".html"))
+		app.StaticWeb("/static/", "./static/")
+		app.StaticWeb("/", ".")
+		app.Get("/", func(ctx iris.Context) {
+			ctx.View("index.html")
+		})
+	*/
 	var err error
 	database, err = sql.Open("sqlite3", "./express-blog.db")
 	if err != nil {
