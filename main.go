@@ -65,6 +65,5 @@ func main() {
 	app.Post("/v1/insert", authentication, InsertConentHandler)
 	app.Get("/v1/getposts", GetPostsHandler)
 	app.Post("/v1/login", UserLogin)
-	app.Get("/v1/logout", UserLogout)
 	app.Run(iris.Addr(END_POINT))
 }

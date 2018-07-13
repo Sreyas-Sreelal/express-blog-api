@@ -4,6 +4,6 @@ package main
 const (
 	USER_NAME = "Sreyas"
 	PASSWORD  = "password"
-	API_HOST  = "localhost"
+	API_HOST  = "192.168.1.2"
 	API_PORT  = "5000"
 )

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
-	"github.com/kataras/iris/sessions"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 )
@@ -16,17 +14,8 @@ type PostData struct {
 	Date    string `db:"Date" json:"Date"`
 }
 
-var (
-	cookieUser = "express-user-cookie"
-	sess       = sessions.New(sessions.Config{Cookie: cookieUser})
-)
-
 //InsertConentHandler handler to inserts new blog content to database
 func InsertConentHandler(ctx iris.Context) {
-	if auth, _ := sess.Start(ctx).GetBoolean("loggined"); !auth {
-		ctx.StatusCode(iris.StatusForbidden)
-		return
-	}
 	username, password, success := ctx.Request().BasicAuth()
 	log.Printf("Username : %s Password : %s success : %t", username, password, success)
 	Content := ctx.PostValue("Content")
@@ -34,16 +23,8 @@ func InsertConentHandler(ctx iris.Context) {
 	Date := ctx.PostValue("Date")
 	log.Printf("Title : %s content : %s date :%s", Title, Content, Date)
 
-	Query := fmt.Sprintf(`
-		INSERT INTO
-		BLOG_POSTS(Title,Content,Date)
-		VALUES('%s','%s','%s')
-		`,
-		Title,
-		Content,
-		Date)
-
-	_, err := database.Exec(Query)
+	statement, _ := database.Prepare("INSERT INTO	BLOG_POSTS(Title,Content,Date) VALUES(?,?,?)")
+	_, err := statement.Exec(Title, Content, Date)
 
 	if err != nil {
 		log.Fatalf("Couldn't insert\n Error:%q", err)
@@ -85,21 +66,12 @@ func GetPostsHandler(ctx iris.Context) {
 
 //UserLogin handles user' login
 func UserLogin(ctx iris.Context) {
-	session := sess.Start(ctx)
 	PostName := ctx.PostValue("Name")
 	PostPass := ctx.PostValue("Password")
 	log.Printf("Username :%s password :%s", PostName, PostPass)
 	if PostName != USER_NAME || PostPass != PASSWORD {
 		ctx.StatusCode(iris.StatusForbidden)
 	} else {
-		session.Set("loggined", true)
 		ctx.StatusCode(iris.StatusOK)
-
 	}
-}
-
-//UserLogout handles user' logout
-func UserLogout(ctx iris.Context) {
-	session := sess.Start(ctx)
-	session.Set("loggined", false)
 }
