@@ -52,7 +52,7 @@ func main() {
 	defer database.Close()
 
 	query := `CREATE TABLE IF NOT EXISTS blog_posts (
-				PostId INTEGER PRIMARY KEY AUTOINCREMENT,
+				PostID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title VARCHAR(45),
 				Content VARCHAR(45),
 				Date TEXT
@@ -64,6 +64,8 @@ func main() {
 	}
 	app.Post("/v1/insert", authentication, InsertConentHandler)
 	app.Get("/v1/getposts", GetPostsHandler)
-	app.Post("/v1/login", UserLogin)
+	app.Post("/v1/login", UserLoginHandler)
+	app.Post("/v1/delete", authentication, DeleteContentHandler)
+	app.Get("/v1/getpostbyid/{postid:string}", GetPostsByIDHandler)
 	app.Run(iris.Addr(END_POINT))
 }
